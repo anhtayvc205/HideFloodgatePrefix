@@ -1,6 +1,6 @@
 name: HideFloodgatePrefix
 main: me.tuanang.hideprefix.HideFloodgatePrefix
-version: 1.0
-api-version: 1.20
-author: TuanAng
-description: Ẩn prefix Floodgate (.) cho PE nhưng vẫn giữ UUID chuẩn
+version: 1.0.0
+api-version: 1.21
+author: tuanang
+depend: [floodgate]
