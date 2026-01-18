@@ -1,37 +1,33 @@
-spackage me.tuanang.hideprefix;
+package me.tuanang.hideprefix;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.geysermc.floodgate.api.FloodgateApi;
 
-public class HideFloodgatePrefix extends JavaPlugin implements Listener {
+public final class HideFloodgatePrefix extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
         Bukkit.getPluginManager().registerEvents(this, this);
-
-        // Fix cho người đang online khi reload
-        for (Player p : Bukkit.getOnlinePlayers()) {
-            cleanName(p);
-        }
-
-        getLogger().info("HideFloodgatePrefix enabled");
+        getLogger().info("HideFloodgatePrefix enabled (1.21.1)");
     }
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent e) {
-        cleanName(e.getPlayer());
-    }
+    public void onLogin(PlayerLoginEvent e) {
+        var player = e.getPlayer();
 
-    private void cleanName(Player p) {
-        String name = p.getName();
-        if (name.startsWith(".")) {
-            String clean = name.substring(1);
-            p.setDisplayName(clean);
-            p.setPlayerListName(clean);
-        }
+        // Chỉ xử lý Bedrock
+        if (!FloodgateApi.getInstance().isFloodgatePlayer(player.getUniqueId())) return;
+
+        // Xóa prefix dấu chấm
+        String cleanName = player.getName().replace(".", "");
+
+        try {
+            player.setDisplayName(cleanName);
+            player.setPlayerListName(cleanName);
+        } catch (Exception ignored) {}
     }
 }
